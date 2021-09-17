@@ -65,6 +65,20 @@ client.connect(err => {
    })
  })
 
+  const doctorsCollection = client.db("doctorsPortal").collection("doctors");
+  app.post("/doctors", (req, res) => {
+   doctorsCollection.insertOne(req.body)
+   .then(result => {
+    return res.send(result.insertedCount > 0)
+   })
+ })
+   app.get("/doctors", (req, res) => {
+   doctorsCollection.find({})
+   .toArray((err, documents)=>{
+    return res.send(documents)
+   })
+ })
+
 
 });
 
