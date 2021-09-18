@@ -74,7 +74,7 @@ client.connect(err => {
       const email = req.query.email;
       doctorsCollection.find({email: email})
       .toArray((err, documents)=>{
-        return res.send(documents)
+        return res.send(documents.length > 0)
     })
  })
 
