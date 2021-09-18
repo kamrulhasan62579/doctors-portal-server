@@ -42,14 +42,6 @@ client.connect(err => {
     return res.send(documents)
    })
  })
- app.post("/appointmentByDate", (req, res) => {
-   const date = req.body;
-  //  console.log(date.date)
-   appointmentsCollection.find({dateState: date.date})
-   .toArray((err, documents) => {
-    return res.send(documents)
-   })
- })
 
   const prescriptionsCollection = client.db("doctorsPortal").collection("prescriptions");
   app.post("/prescriptions", (req, res) => {
@@ -78,6 +70,31 @@ client.connect(err => {
     return res.send(documents)
    })
  })
+    app.get("/isdoctor/:email", (req, res) => {
+      const email = req.query.email;
+      doctorsCollection.find({email: email})
+      .toArray((err, documents)=>{
+        return res.send(documents)
+    })
+ })
+
+  app.post("/appointmentByDate", (req, res) => {
+    const date = req.body;
+    const email = req.body.email;
+
+      doctorsCollection.find({email: email})
+      .toArray((err, documents)=>{
+      const filter = {dateState: date.date}
+      if (documents.length === 0) {
+          filter.email= email;
+      }
+      appointmentsCollection.find(filter)
+      .toArray((err, doctor) => {
+        return res.send(doctor)
+      })
+   })
+ })
+
 
 
 });
